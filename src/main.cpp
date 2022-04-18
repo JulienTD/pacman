@@ -5,6 +5,7 @@
 #include "entity/rectangle/Rectangle.hpp"
 #include "entity/sprite/Sprite.hpp"
 #include <SDL2/SDL_pixels.h>
+#include "map/Map.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -17,21 +18,15 @@ int main(int argc, char* argv[])
 
     Window *window = (new WindowBuilder())
                     ->setName(std::string("Pacman"))
-                    ->setDimensions(1000, 1000)
+                    ->setDimensions(31 * 32, 28 * 32)
                     ->setPosition(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED)
                     ->build();
 
-    auto *sprite = new Sprite("s", "./resources/spritesheet.png", window, 100, 100, 32, 32);
+    auto tiles = Map::readMapFromFile("./resources/map.txt", window);
 
-    sprite->setMaxStateNbr(3);
-    sprite->setYStateGap(12);
-    sprite->setSpriteHeight(38);
-    sprite->setSpriteWidth(38);
-    sprite->setSpriteX(852);
-    sprite->setSpriteY(3);
-    sprite->setYAnimation(true);
-
-    window->addEntity(sprite);
+    for (auto &tile : tiles) {
+        window->addEntity(tile);
+    }
     // window->addEntity(new Rectangle("foo", 100, 100, 100, 100, true, {0, 0, 255, 255}));
     // window->addEntity(new Rectangle("bar", 200, 200, 100, 100, false, {0, 0, 255, 255}));
 

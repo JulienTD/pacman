@@ -6,6 +6,7 @@
 #include <string>
 #include <stdexcept>
 #include <iostream>
+#include <chrono>
 #include <vector>
 #include "entity/Entity.hpp"
 
@@ -20,6 +21,7 @@ class Window {
         void close();
     protected:
     private:
+        std::chrono::high_resolution_clock::time_point _timeRender;
         SDL_Window *_window;
         SDL_Renderer *_renderer;
 

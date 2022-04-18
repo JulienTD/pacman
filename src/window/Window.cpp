@@ -3,7 +3,8 @@
 Window::Window(std::string name, int x, int y, int height, int width, int flags):
 _window(SDL_CreateWindow(name.c_str(), x, y, width, height, flags)),
 _renderer(nullptr),
-_closed(false)
+_closed(false),
+_timeRender(std::chrono::high_resolution_clock::now())
 {
     if (!this->_window) {
         throw std::runtime_error(SDL_GetError());
@@ -31,12 +32,26 @@ void Window::run() {
                 case SDL_QUIT:
                     this->_closed = true;
                     break;
+                default:
+                    for (Entity *entity : this->_entities) {
+                        entity->onEvent(this, &events);
+                    }
             }
         }
+
+        // this->interpretEvents();
+        auto now = std::chrono::high_resolution_clock::now();
+        auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->_timeRender).count();
+
+        if (elapsedTime < 1000 / 20)//(this->_currScene->getMaxFramePerSecond() / 60))
+            continue;
+        // std::cout << "Render" << std::endl;
+        this->_timeRender = now;
 
         SDL_SetRenderDrawColor(this->_renderer, 0, 0, 0, 0);
         SDL_RenderClear(this->_renderer);
         for (Entity *entity : this->_entities) {
+            entity->update(this);
             entity->render(this);
         }
         SDL_RenderPresent(this->_renderer);

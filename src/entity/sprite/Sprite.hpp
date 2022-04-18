@@ -22,13 +22,13 @@ class Sprite : public Entity {
         void setSpriteWidth(int spriteWidth);
         void setXAnimation(bool xAnimation);
         void setYAnimation(bool yAnimation);
+        void setTickRate(int tickRate);
+        void setTickStep(int tickStep);
         void render(Window *window);
     protected:
     private:
         SDL_Surface *_image;
         SDL_Texture *_texture;
-        int _x;
-        int _y;
         int _width;
         int _height;
         int _stateNbr;
@@ -41,6 +41,9 @@ class Sprite : public Entity {
         int _spriteHeight;
         bool _xAnimation;
         bool _yAnimation;
+        int _currentTick;
+        int _tickRate;
+        int _tickStep;
 };
 
 #endif /* !SPRITE_HPP_ */
